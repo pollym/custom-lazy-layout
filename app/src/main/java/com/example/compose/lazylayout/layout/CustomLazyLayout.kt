@@ -1,14 +1,14 @@
 package com.example.compose.lazylayout.layout
 
-import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.ScrollableDefaults
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.lazy.layout.LazyLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.IntOffset
 import com.example.compose.lazylayout.ListItem
 
 @Composable
@@ -22,7 +22,12 @@ fun CustomLazyLayout(
     LazyLayout(
         modifier = modifier
             .clipToBounds()
-            .lazyLayoutPointerInput(state),
+            .scrollable(
+                orientation = Orientation.Horizontal,
+                flingBehavior = ScrollableDefaults.flingBehavior(),
+                overscrollEffect = ScrollableDefaults.overscrollEffect(),
+                state = state
+            ),
         itemProvider = itemProvider,
     ) { constraints ->
         val boundaries = state.getBoundaries(constraints)
@@ -37,15 +42,6 @@ fun CustomLazyLayout(
                 val item = itemProvider.getItem(index)
                 item?.let { placeItem(state, item, placeables) }
             }
-        }
-    }
-}
-
-private fun Modifier.lazyLayoutPointerInput(state: LazyLayoutState): Modifier {
-    return pointerInput(Unit) {
-        detectDragGestures { change, dragAmount ->
-            change.consume()
-            state.onDrag(IntOffset(dragAmount.x.toInt(), dragAmount.y.toInt()))
         }
     }
 }

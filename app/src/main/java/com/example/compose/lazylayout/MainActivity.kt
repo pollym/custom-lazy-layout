@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             LazyLayoutBlogTheme {
                 val state by viewModel.state.collectAsStateWithLifecycle()
-                CustomLazyLayoutScreen(state = state, actions = viewModel)
+                CustomLazyLayoutScreen(state = state)
             }
         }
     }
